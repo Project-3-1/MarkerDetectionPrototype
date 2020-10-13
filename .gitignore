@@ -1,0 +1,6 @@
+*.png
+*.jpg
+markers
+cmake-build-debug
+CMakeFiles
+client_id
