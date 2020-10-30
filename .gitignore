@@ -6,3 +6,7 @@ CMakeFiles
 client_id
 .idea
 !CalibrationImages/*.jpg
+~gravity
+CMakeCache.txt
+CMakeFiles
+cmake-build-debug

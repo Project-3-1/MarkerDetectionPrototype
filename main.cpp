@@ -103,6 +103,11 @@ void detectCharucoBoardWithCalibrationPose()
         }
     }
 }
+
+double calculateDistance(int radius_px) {
+    return (2.6991051241610737 * 480.0 * 186.25) / (radius_px * 4.2333333);
+}
+
 void detectCharucoBoardWithoutCalibration()
 {
     std::cout << "TickA";
@@ -127,8 +132,10 @@ void detectCharucoBoardWithoutCalibration()
 
         // retrieve the image
         cv::Mat image, result_image;
-        inputVideo.retrieve(image);
-        cv::resize(image, image, cv::Size(600, 600));
+        //inputVideo.retrieve(image);
+        std::string image_path = cv::samples::findFile("CalibrationImages/300cm.jpg");
+        image = imread(image_path, cv::IMREAD_COLOR);
+        //cv::resize(image, image, cv::Size(600, 600));
 
         image.copyTo(result_image);
 
@@ -155,12 +162,17 @@ void detectCharucoBoardWithoutCalibration()
         cv::Mat gray;
         cvtColor(image, gray, cv::COLOR_BGR2GRAY);
         medianBlur(gray, gray, 3);
-        cv::threshold(gray, gray, 0, 255, cv::THRESH_OTSU + cv::THRESH_BINARY);
+        //cv::threshold(gray, gray, 0, 255, cv::THRESH_OTSU + cv::THRESH_BINARY);
+
+        /*
+        cv::Mat element = getStructuringElement( cv::MorphShapes::MORPH_CROSS, cv::Size( 5, 5));
+        morphologyEx( gray, gray, cv::MorphTypes::MORPH_OPEN, element );*/
+
         // detect circles
         std::vector<cv::Vec3f> circles;
-        HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 2,
-                     gray.rows/4,  // change this value to detect circles with different distances to each other
-                     150, 60, 20, 50 // change the last two parameters
+        HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
+                     1,  // change this value to detect circles with different distances to each other
+                     150, 60, 5, 50 // change the last two parameters
                 // (min_radius & max_radius) to detect larger circles
         );
 
@@ -202,19 +214,21 @@ void detectCharucoBoardWithoutCalibration()
                 for(cv::Vec3i c : detected_circles)
                 {
                     cv::Point center = cv::Point(c[0], c[1]);
-                    circle(result_image, center, 1, cv::Scalar(0,100,100), 3, cv::LINE_AA);
+                    circle(result_image, center, 1, cv::Scalar(0,100,100), 1, cv::LINE_AA);
 
                     int radius = c[2];
-                    circle(result_image, center, radius, cv::Scalar(255,0,255), 3, cv::LINE_AA);
+                    circle(result_image, center, radius, cv::Scalar(255,0,255), 1, cv::LINE_AA);
                 }
             } else if(draw_all_circles) {
                 for(cv::Vec3i c : circles)
                 {
                     cv::Point center = cv::Point(c[0], c[1]);
-                    circle(result_image, center, 1, cv::Scalar(0,100,100), 3, cv::LINE_AA);
+                    circle(result_image, center, 1, cv::Scalar(0,100,100), 1, cv::LINE_AA);
 
                     int radius = c[2];
-                    circle(result_image, center, radius, cv::Scalar(255,0,255), 3, cv::LINE_AA);
+                    circle(result_image, center, radius, cv::Scalar(255,0,255), 1, cv::LINE_AA);
+                    std::cout << calculateDistance(radius);
+                    std::cout << "mm\n";
                 }
             }
         }
