@@ -5,3 +5,4 @@ cmake-build-debug
 CMakeFiles
 client_id
 .idea
+!CalibrationImages/*.jpg
