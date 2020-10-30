@@ -13,6 +13,9 @@ namespace {
     const char* about = "A tutorial code on charuco board creation and detection of charuco board with and without camera caliberation";
     const char* keys = "{c        |       | Put value of c=1 to create charuco board;\nc=2 to detect charuco board without camera calibration;\nc=3 to detect charuco board with camera calibration and Pose Estimation}";
 }
+
+const int DICTIONARY = cv::aruco::DICT_6X6_50;
+
 void createBoard();
 void detectCharucoBoardWithCalibrationPose();
 void detectCharucoBoardWithoutCalibration();
@@ -27,7 +30,7 @@ static bool readCameraParameters(std::string filename, cv::Mat& camMatrix, cv::M
 }
 void createBoard()
 {
-    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(DICTIONARY);
     cv::Ptr<cv::aruco::CharucoBoard> board = cv::aruco::CharucoBoard::create(5, 7, 0.04f, 0.02f, dictionary);
     cv::Mat boardImage;
     board->draw(cv::Size(600, 500), boardImage, 10, 1);
@@ -36,7 +39,7 @@ void createBoard()
 
 void createMarkers()
 {
-    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(DICTIONARY);
     cv::Mat markerImage;
     char buffer[20];
     for(int i = 0; i < 250; i++)
@@ -53,12 +56,12 @@ void detectCharucoBoardWithCalibrationPose()
     cv::VideoCapture inputVideo;
     inputVideo.open(0);
     cv::Mat cameraMatrix, distCoeffs;
-    std::string filename = "calib.txt";
+    std::string filename = "calibrations/cal2";
     bool readOk = readCameraParameters(filename, cameraMatrix, distCoeffs);
     if (!readOk) {
         std::cerr << "Invalid camera file" << std::endl;
     } else {
-        cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+        cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(DICTIONARY);
         cv::Ptr<cv::aruco::CharucoBoard> board = cv::aruco::CharucoBoard::create(5, 7, 0.04f, 0.02f, dictionary);
         cv::Ptr<cv::aruco::DetectorParameters> params = cv::aruco::DetectorParameters::create();
         while (inputVideo.grab()) {
@@ -83,8 +86,14 @@ void detectCharucoBoardWithCalibrationPose()
                     // cv::aruco::estimatePoseCharucoBoard(charucoCorners, charucoIds, board, cameraMatrix, distCoeffs, rvec, tvec);
                     bool valid = cv::aruco::estimatePoseCharucoBoard(charucoCorners, charucoIds, board, cameraMatrix, distCoeffs, rvec, tvec);
                     // if charuco pose is valid
-                    if (valid)
-                        cv::aruco::drawAxis(imageCopy, cameraMatrix, distCoeffs, rvec, tvec, 0.1f);
+                    if (valid) {
+                        cv::aruco::drawAxis(imageCopy, cameraMatrix, distCoeffs, rvec, tvec, 0.024f);
+                        std::cout << tvec;
+                        std::cout << "\n";
+                    } else {
+                        std::cout << "not valid\n";
+                    }
+
                 }
             }
             cv::imshow("out", imageCopy);
@@ -99,7 +108,7 @@ void detectCharucoBoardWithoutCalibration()
     std::cout << "TickA";
     cv::VideoCapture inputVideo; //("test/video.mp4");
     inputVideo.open(0);
-    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_50);
+    cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(DICTIONARY);
     cv::Ptr<cv::aruco::CharucoBoard> board = cv::aruco::CharucoBoard::create(5, 7, 0.04f, 0.02f, dictionary);
     cv::Ptr<cv::aruco::DetectorParameters> params = cv::aruco::DetectorParameters::create();
     params->cornerRefinementMethod = cv::aruco::CORNER_REFINE_NONE;
@@ -219,6 +228,7 @@ void detectCharucoBoardWithoutCalibration()
             break;
     }
 }
+
 int main(int argc, char* argv[])
 {
     cv::CommandLineParser parser(argc, argv, keys);

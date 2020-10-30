@@ -70,6 +70,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/yonas/Arduino/Marble-Cpp/calibrate_camera_charuco.cpp">
+			<Option target="Marble_Cpp"/>
+		</Unit>
+		<Unit filename="/home/yonas/Arduino/Marble-Cpp/calibrate_camera_charuco.h">
+			<Option target="Marble_Cpp"/>
+		</Unit>
 		<Unit filename="/home/yonas/Arduino/Marble-Cpp/main.cpp">
 			<Option target="Marble_Cpp"/>
 		</Unit>

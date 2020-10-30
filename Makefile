@@ -89,8 +89,8 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/yonas/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/202.7319.62/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/home/yonas/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/202.7319.62/bin/cmake/linux/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -143,6 +143,33 @@ Marble_Cpp/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Marble_Cpp.dir/build.make CMakeFiles/Marble_Cpp.dir/build
 .PHONY : Marble_Cpp/fast
 
+calibrate_camera_charuco.o: calibrate_camera_charuco.cpp.o
+
+.PHONY : calibrate_camera_charuco.o
+
+# target to build an object file
+calibrate_camera_charuco.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Marble_Cpp.dir/build.make CMakeFiles/Marble_Cpp.dir/calibrate_camera_charuco.cpp.o
+.PHONY : calibrate_camera_charuco.cpp.o
+
+calibrate_camera_charuco.i: calibrate_camera_charuco.cpp.i
+
+.PHONY : calibrate_camera_charuco.i
+
+# target to preprocess a source file
+calibrate_camera_charuco.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Marble_Cpp.dir/build.make CMakeFiles/Marble_Cpp.dir/calibrate_camera_charuco.cpp.i
+.PHONY : calibrate_camera_charuco.cpp.i
+
+calibrate_camera_charuco.s: calibrate_camera_charuco.cpp.s
+
+.PHONY : calibrate_camera_charuco.s
+
+# target to generate assembly for a file
+calibrate_camera_charuco.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Marble_Cpp.dir/build.make CMakeFiles/Marble_Cpp.dir/calibrate_camera_charuco.cpp.s
+.PHONY : calibrate_camera_charuco.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -179,6 +206,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Marble_Cpp"
+	@echo "... calibrate_camera_charuco.o"
+	@echo "... calibrate_camera_charuco.i"
+	@echo "... calibrate_camera_charuco.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
