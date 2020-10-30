@@ -8,5 +8,5 @@ client_id
 !CalibrationImages/*.jpg
 ~gravity
 CMakeCache.txt
-CMakeFiles
-cmake-build-debug
+Makefile
+Marble_Cpp
