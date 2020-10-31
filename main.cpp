@@ -108,6 +108,10 @@ double calculateDistance(int radius_px) {
     return (2.6991051241610737 * 480.0 * 186.25) / (radius_px * 4.2333333);
 }
 
+static const int measurements = 10;
+static double distances[measurements] = {};
+static int avg_index = 0;
+
 void detectCharucoBoardWithoutCalibration()
 {
     std::cout << "TickA";
@@ -132,9 +136,9 @@ void detectCharucoBoardWithoutCalibration()
 
         // retrieve the image
         cv::Mat image, result_image;
-        //inputVideo.retrieve(image);
-        std::string image_path = cv::samples::findFile("CalibrationImages/300cm.jpg");
-        image = imread(image_path, cv::IMREAD_COLOR);
+        inputVideo.retrieve(image);
+        //std::string image_path = cv::samples::findFile("CalibrationImages/300cm.jpg");
+        //image = imread(image_path, cv::IMREAD_COLOR);
         //cv::resize(image, image, cv::Size(600, 600));
 
         image.copyTo(result_image);
@@ -226,9 +230,21 @@ void detectCharucoBoardWithoutCalibration()
                     circle(result_image, center, 1, cv::Scalar(0,100,100), 1, cv::LINE_AA);
 
                     int radius = c[2];
+                    double dist = calculateDistance(radius);
+                    distances[avg_index] = dist;
+                    avg_index = (avg_index + 1) % measurements;
+
+                    double sum = 0;
+                    for(double distance : distances) {
+                        sum += distance;
+                    }
+                    sum /= measurements;
+
                     circle(result_image, center, radius, cv::Scalar(255,0,255), 1, cv::LINE_AA);
-                    std::cout << calculateDistance(radius);
+                    std::cout << sum;
                     std::cout << "mm\n";
+
+
                 }
             }
         }
